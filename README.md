@@ -1,4 +1,6 @@
 # AmazingAvatar
+[![GitHub release](https://img.shields.io/github/release/hearsilent/AmazingAvatar.svg?maxAge=2592000)](https://github.com/hearsilent/AmazingAvatar)
+[![license](https://img.shields.io/github/license/hearsilent/AmazingAvatar.svg?maxAge=2592000)](https://github.com/hearsilent/AmazingAvatar/blob/master/LICENSE)
 
 An android amazing avatar anim in CollapsingToolbarLayout.
 
