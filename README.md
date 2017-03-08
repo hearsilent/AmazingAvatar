@@ -12,11 +12,11 @@ An android amazing avatar anim in CollapsingToolbarLayout.
 ### Collapsed
 <img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/fc2af320-da03-42ec-ac79-723ec75a3fad.png" height="500">
 
-# Usage
+## Usage
 
 Just Clone and Build.
 
-# Customization
+## Customization
 
 You can change header view to what you want.
 ```xml
@@ -95,7 +95,7 @@ Android GINGERBREAD 4.1+
 
 Avatars from [maximedegreve/TinyFaces](https://github.com/maximedegreve/TinyFaces).
 
-### Let me know!
+## Let me know!
 
 I'd be really happy if you sent me links to your projects where you use my component. Just send an email to hear.silent1995@gmail.com And do let me know if you have any questions or suggestion regarding the example. 
 
