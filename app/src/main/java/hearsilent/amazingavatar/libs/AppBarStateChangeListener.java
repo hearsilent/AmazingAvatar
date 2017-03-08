@@ -5,12 +5,11 @@ import android.support.design.widget.AppBarLayout;
 public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffsetChangedListener {
 
 	public enum State {
-		EXPANDED,
-		COLLAPSED,
-		IDLE
+		EXPANDED, COLLAPSED, IDLE
 	}
 
 	private State mCurrentState = State.IDLE;
+	private float mCurrentOffset = 0f;
 
 	@Override
 	public final void onOffsetChanged(AppBarLayout appBarLayout, int i) {
@@ -30,11 +29,19 @@ public abstract class AppBarStateChangeListener implements AppBarLayout.OnOffset
 			}
 			mCurrentState = State.IDLE;
 		}
-		onOffsetChanged(mCurrentState, Math.abs(i / (float) appBarLayout.getTotalScrollRange()));
+		float offset = Math.abs(i / (float) appBarLayout.getTotalScrollRange());
+		if (offset != mCurrentOffset) {
+			mCurrentOffset = offset;
+			onOffsetChanged(mCurrentState, offset);
+		}
 	}
 
 	public State getCurrentState() {
 		return mCurrentState;
+	}
+
+	public float getCurrentOffset() {
+		return mCurrentOffset;
 	}
 
 	public abstract void onStateChanged(AppBarLayout appBarLayout, State state);

@@ -1,5 +1,7 @@
 package hearsilent.amazingavatar;
 
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.Space;
@@ -40,10 +42,12 @@ public class MainActivity extends AppCompatActivity {
 	private Toolbar mToolBar;
 
 	private RecyclerView mRecyclerView;
+	private AppBarStateChangeListener mAppBarStateChangeListener;
 
 	private int[] mAvatarPoint = new int[2], mSpacePoint = new int[2], mToolbarTextPoint =
 			new int[2], mTitleTextViewPoint = new int[2];
 	private float mTitleTextSize;
+	private int mTitleTextViewWidth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setUpAmazingAvatar() {
-		mAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+		mAppBarStateChangeListener = new AppBarStateChangeListener() {
 
 			@Override
 			public void onStateChanged(AppBarLayout appBarLayout,
@@ -99,24 +103,30 @@ public class MainActivity extends AppCompatActivity {
 
 			@Override
 			public void onOffsetChanged(AppBarStateChangeListener.State state, float offset) {
-				float xOffset = -(mAvatarPoint[0] - mSpacePoint[0]) * offset;
-				float yOffset = -(mAvatarPoint[1] - mSpacePoint[1]) * offset;
-				float xTitleOffset = -(mTitleTextViewPoint[0] - mToolbarTextPoint[0]) * offset;
-				float yTitleOffset = -(mTitleTextViewPoint[1] - mToolbarTextPoint[1]) * offset;
-				int newSize = Utils.convertDpToPixelSize(EXPAND_AVATAR_SIZE_DP -
-						(EXPAND_AVATAR_SIZE_DP - COLLAPSED_AVATAR_SIZE_DP) * offset, MainActivity
-						.this);
-				float newTextSize =
-						mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
-				mAvatarImageView.getLayoutParams().width = newSize;
-				mAvatarImageView.getLayoutParams().height = newSize;
-				mAvatarImageView.setTranslationX(xOffset);
-				mAvatarImageView.setTranslationY(yOffset);
-				mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
-				mTitleTextView.setTranslationX(xTitleOffset);
-				mTitleTextView.setTranslationY(yTitleOffset);
+				translationView(offset);
 			}
-		});
+		};
+		mAppBarLayout.addOnOffsetChangedListener(mAppBarStateChangeListener);
+	}
+
+	private void translationView(float offset) {
+		float xOffset = -(mAvatarPoint[0] - mSpacePoint[0]) * offset;
+		float yOffset = -(mAvatarPoint[1] - mSpacePoint[1]) * offset;
+		float xTitleOffset = -(mTitleTextViewPoint[0] - mToolbarTextPoint[0]) * offset;
+		float yTitleOffset = -(mTitleTextViewPoint[1] - mToolbarTextPoint[1]) * offset;
+		int newSize = Utils.convertDpToPixelSize(
+				EXPAND_AVATAR_SIZE_DP - (EXPAND_AVATAR_SIZE_DP - COLLAPSED_AVATAR_SIZE_DP) * offset,
+				MainActivity
+						.this);
+		float newTextSize =
+				mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
+		mAvatarImageView.getLayoutParams().width = newSize;
+		mAvatarImageView.getLayoutParams().height = newSize;
+		mAvatarImageView.setTranslationX(xOffset);
+		mAvatarImageView.setTranslationY(yOffset);
+		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
+		mTitleTextView.setTranslationX(xTitleOffset);
+		mTitleTextView.setTranslationY(yTitleOffset);
 	}
 
 	/**
@@ -128,7 +138,27 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onSuccess(AvatarModel avatarModel) {
 				super.onSuccess(avatarModel);
+				if (isFinishing()) {
+					return;
+				}
 				ImageLoader.getInstance().displayImage(avatarModel.url, mAvatarImageView);
+				mTitleTextView.setText(
+						String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
+								avatarModel.lastName));
+				mTitleTextView.post(new Runnable() {
+
+					@Override
+					public void run() {
+						Rect bounds = new Rect();
+						Paint textPaint = mTitleTextView.getPaint();
+						textPaint.setTextSize(mTitleTextSize);
+						textPaint.getTextBounds(mTitleTextView.getText().toString(), 0,
+								mTitleTextView.getText().length(), bounds);
+						mTitleTextViewPoint[0] -= (bounds.width() - mTitleTextViewWidth) / 2;
+						mTitleTextViewWidth = bounds.width();
+						translationView(mAppBarStateChangeListener.getCurrentOffset());
+					}
+				});
 			}
 		});
 	}
@@ -140,8 +170,9 @@ public class MainActivity extends AppCompatActivity {
 		mAvatarImageView.getLocationOnScreen(mAvatarPoint);
 		mSpace.getLocationOnScreen(mSpacePoint);
 		mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
-		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(COLLAPSED_AVATAR_SIZE_DP, this);
+		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(24, this);
 		mTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
+		mTitleTextViewWidth = mTitleTextView.getWidth();
 	}
 
 	private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
