@@ -1,8 +1,8 @@
 package hearsilent.amazingavatar;
 
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.Space;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 	private int[] mAvatarPoint = new int[2], mSpacePoint = new int[2], mToolbarTextPoint =
 			new int[2], mTitleTextViewPoint = new int[2];
 	private float mTitleTextSize;
-	private int mTitleTextViewWidth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -145,20 +144,40 @@ public class MainActivity extends AppCompatActivity {
 				mTitleTextView.setText(
 						String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
 								avatarModel.lastName));
-				mTitleTextView.post(new Runnable() {
+				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override
 					public void run() {
-						Rect bounds = new Rect();
-						Paint textPaint = mTitleTextView.getPaint();
-						textPaint.setTextSize(mTitleTextSize);
-						textPaint.getTextBounds(mTitleTextView.getText().toString(), 0,
-								mTitleTextView.getText().length(), bounds);
-						mTitleTextViewPoint[0] -= (bounds.width() - mTitleTextViewWidth) / 2;
-						mTitleTextViewWidth = bounds.width();
-						translationView(mAppBarStateChangeListener.getCurrentOffset());
+						resetPoints();
 					}
 				});
+			}
+		});
+	}
+
+	private void clearAnim() {
+		mAvatarImageView.setTranslationX(0);
+		mAvatarImageView.setTranslationY(0);
+		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
+		mTitleTextView.setTranslationX(0);
+		mTitleTextView.setTranslationY(0);
+	}
+
+	private void resetPoints() {
+		clearAnim();
+
+		int avatarSize = Utils.convertDpToPixelSize(EXPAND_AVATAR_SIZE_DP, this);
+		mAvatarImageView.getLocationOnScreen(mAvatarPoint);
+		mAvatarPoint[0] -= (avatarSize - mAvatarImageView.getWidth()) / 2;
+		mSpace.getLocationOnScreen(mSpacePoint);
+		mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
+		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(24, this);
+		mTitleTextView.post(new Runnable() {
+
+			@Override
+			public void run() {
+				mTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
+				translationView(mAppBarStateChangeListener.getCurrentOffset());
 			}
 		});
 	}
@@ -166,13 +185,10 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-
-		mAvatarImageView.getLocationOnScreen(mAvatarPoint);
-		mSpace.getLocationOnScreen(mSpacePoint);
-		mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
-		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(24, this);
-		mTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
-		mTitleTextViewWidth = mTitleTextView.getWidth();
+		if (!hasFocus) {
+			return;
+		}
+		resetPoints();
 	}
 
 	private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
