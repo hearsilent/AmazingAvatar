@@ -8,11 +8,15 @@ An android amazing avatar anim in CollapsingToolbarLayout.
 <img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/screenrecord.gif" height="500">
 
 ### Expanded
-<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/caf28b9c-42e8-40c7-a68e-7a069e4e9123.png" height="500">
+<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/device-2017-03-12-220509.png" height="500">
 ### Collapsed
-<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/fc2af320-da03-42ec-ac79-723ec75a3fad.png" height="500">
+<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/device-2017-03-12-220529.png" height="500">
 
 ## Usage
+
+*For a working implementation, please have a look at the Sample Project - sample*
+
+<a href='https://play.google.com/store/apps/details?id=hearsilent.amazingavatar&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'  width="155" height="60"/></a>
 
 Just Clone and Build.
 
