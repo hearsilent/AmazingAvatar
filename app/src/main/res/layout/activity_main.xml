@@ -34,6 +34,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="?attr/actionBarSize"
 				android:gravity="center_vertical"
+				android:orientation="horizontal"
 				app:layout_collapseMode="parallax"
 				app:layout_collapseParallaxMultiplier="1">
 
@@ -41,7 +42,8 @@
 					android:id="@+id/space"
 					android:layout_width="32dp"
 					android:layout_height="32dp"
-					android:layout_marginLeft="32dp"/>
+					android:layout_marginLeft="32dp"
+					android:layout_marginRight="16dp"/>
 
 				<TextView
 					android:id="@+id/toolbar_title"
@@ -57,6 +59,21 @@
 				app:layout_collapseMode="parallax"
 				app:layout_collapseParallaxMultiplier="1">
 
+				<TextView
+					android:id="@+id/textView_title"
+					android:layout_width="wrap_content"
+					android:layout_height="?attr/actionBarSize"
+					android:layout_gravity="center_horizontal"
+					android:layout_marginLeft="56dp"
+					android:layout_marginRight="56dp"
+					android:layout_marginTop="130dp"
+					android:ellipsize="end"
+					android:gravity="center"
+					android:maxLines="1"
+					android:text="HearSilent"
+					android:textColor="#FFF"
+					android:textSize="24sp"/>
+
 				<de.hdodenhof.circleimageview.CircleImageView
 					android:id="@+id/imageView_avatar"
 					android:layout_width="80dp"
@@ -66,18 +83,6 @@
 					android:background="@drawable/avatar_background"
 					android:contentDescription="@null"
 					android:padding="1dp"/>
-
-				<TextView
-					android:id="@+id/textView_title"
-					android:layout_width="wrap_content"
-					android:layout_height="?attr/actionBarSize"
-					android:layout_gravity="center_horizontal"
-					android:layout_marginTop="130dp"
-					android:gravity="center"
-					android:maxLines="1"
-					android:text="HearSilent"
-					android:textColor="#FFF"
-					android:textSize="24sp"/>
 			</FrameLayout>
 		</android.support.design.widget.CollapsingToolbarLayout>
 	</android.support.design.widget.AppBarLayout>
@@ -86,5 +91,6 @@
 		android:id="@+id/recyclerView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		tools:listitem="@layout/item_demo"/>
 </android.support.design.widget.CoordinatorLayout>

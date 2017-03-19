@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 		mAvatarPoint[0] -= (avatarSize - mAvatarImageView.getWidth()) / 2;
 		mSpace.getLocationOnScreen(mSpacePoint);
 		mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
-		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(24, this);
+		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(16, this);
 		mTitleTextView.post(new Runnable() {
 
 			@Override
