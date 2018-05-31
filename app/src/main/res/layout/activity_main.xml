@@ -38,7 +38,7 @@
 				app:layout_collapseMode="parallax"
 				app:layout_collapseParallaxMultiplier="1">
 
-				<android.support.v4.widget.Space
+				<Space
 					android:id="@+id/space"
 					android:layout_width="32dp"
 					android:layout_height="32dp"

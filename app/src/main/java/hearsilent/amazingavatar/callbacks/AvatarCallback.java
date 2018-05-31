@@ -7,9 +7,6 @@ public class AvatarCallback {
 	public void onSuccess(AvatarModel avatarModel) {
 	}
 
-	public void onFail(String errorMessage) {
-	}
-
 	public void onFail() {
 	}
 }

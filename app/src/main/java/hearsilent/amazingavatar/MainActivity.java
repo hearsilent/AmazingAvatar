@@ -3,8 +3,8 @@ package hearsilent.amazingavatar;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.widget.Space;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -59,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void findViews() {
-		mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
-		mAvatarImageView = (CircleImageView) findViewById(R.id.imageView_avatar);
-		mToolbarTextView = (TextView) findViewById(R.id.toolbar_title);
-		mTitleTextView = (TextView) findViewById(R.id.textView_title);
-		mSpace = (Space) findViewById(R.id.space);
-		mToolBar = (Toolbar) findViewById(R.id.toolbar);
-		mRecyclerView = (RecyclerView) findViewById(recyclerView);
+		mAppBarLayout = findViewById(R.id.app_bar);
+		mAvatarImageView = findViewById(R.id.imageView_avatar);
+		mToolbarTextView = findViewById(R.id.toolbar_title);
+		mTitleTextView = findViewById(R.id.textView_title);
+		mSpace = findViewById(R.id.space);
+		mToolBar = findViewById(R.id.toolbar);
+		mRecyclerView = findViewById(recyclerView);
 	}
 
 	private void setUpViews() {
@@ -155,28 +156,22 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
-	private void clearAnim() {
-		mAvatarImageView.setTranslationX(0);
-		mAvatarImageView.setTranslationY(0);
-		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize);
-		mTitleTextView.setTranslationX(0);
-		mTitleTextView.setTranslationY(0);
-	}
-
 	private void resetPoints() {
-		clearAnim();
-
 		int avatarSize = Utils.convertDpToPixelSize(EXPAND_AVATAR_SIZE_DP, this);
 		mAvatarImageView.getLocationOnScreen(mAvatarPoint);
-		mAvatarPoint[0] -= (avatarSize - mAvatarImageView.getWidth()) / 2;
+		mAvatarPoint[0] -= mAvatarImageView.getTranslationX() +
+				(avatarSize - mAvatarImageView.getWidth()) / 2f;
+		mAvatarPoint[1] -= mAvatarImageView.getTranslationY();
 		mSpace.getLocationOnScreen(mSpacePoint);
 		mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
 		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(16, this);
-		mTitleTextView.post(new Runnable() {
+		mTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
+		mTitleTextViewPoint[0] -= mTitleTextView.getTranslationX();
+		mTitleTextViewPoint[1] -= mTitleTextView.getTranslationY();
+		new Handler().post(new Runnable() {
 
 			@Override
 			public void run() {
-				mTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
 				translationView(mAppBarStateChangeListener.getCurrentOffset());
 			}
 		});
@@ -200,18 +195,19 @@ public class MainActivity extends AppCompatActivity {
 			private DemoViewHolder(View view) {
 				super(view);
 
-				textView = (TextView) view.findViewById(R.id.textView);
+				textView = view.findViewById(R.id.textView);
 			}
 		}
 
+		@NonNull
 		@Override
-		public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 			return new DemoViewHolder(LayoutInflater.from(parent.getContext())
 					.inflate(R.layout.item_demo, parent, false));
 		}
 
 		@Override
-		public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+		public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 			((DemoViewHolder) holder).textView
 					.setText(String.format(Locale.getDefault(), "HearSilent %d", position));
 		}

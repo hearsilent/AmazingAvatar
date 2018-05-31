@@ -1,6 +1,7 @@
 package hearsilent.amazingavatar.libs;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,9 @@ public final class FlingBehavior extends AppBarLayout.Behavior {
 	}
 
 	@Override
-	public boolean onNestedFling(CoordinatorLayout coordinatorLayout, AppBarLayout child,
-	                             View target, float velocityX, float velocityY, boolean consumed) {
+	public boolean onNestedFling(@NonNull CoordinatorLayout coordinatorLayout,
+	                             @NonNull AppBarLayout child, @NonNull View target, float velocityX,
+	                             float velocityY, boolean consumed) {
 		if (velocityY > 0 && !isPositive || velocityY < 0 && isPositive) {
 			velocityY = velocityY * -1;
 		}
@@ -37,8 +39,8 @@ public final class FlingBehavior extends AppBarLayout.Behavior {
 
 	@Override
 	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, AppBarLayout child,
-	                              View target, int dx, int dy, int[] consumed) {
-		super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+	                              View target, int dx, int dy, int[] consumed, int type) {
+		super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
 		isPositive = dy > 0;
 	}
 }
