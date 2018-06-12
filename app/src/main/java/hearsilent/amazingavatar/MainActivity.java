@@ -121,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
 		float xAvatarOffset =
 				(mSpacePoint[0] - mAvatarPoint[0] - (expandAvatarSize - newAvatarSize) / 2f) *
 						offset;
+		// If avatar center in vertical, just half `(expandAvatarSize - newAvatarSize)`
 		float yAvatarOffset =
-				(mSpacePoint[1] - mAvatarPoint[1] - (expandAvatarSize - newAvatarSize) / 2f) *
-						offset;
+				(mSpacePoint[1] - mAvatarPoint[1] - (expandAvatarSize - newAvatarSize)) * offset;
 		mAvatarImageView.getLayoutParams().width = Math.round(newAvatarSize);
 		mAvatarImageView.getLayoutParams().height = Math.round(newAvatarSize);
 		mAvatarImageView.setTranslationX(xAvatarOffset);
@@ -131,13 +131,14 @@ public class MainActivity extends AppCompatActivity {
 
 		float newTextSize =
 				mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
-		Paint paint = new Paint();
+		Paint paint = new Paint(mTitleTextView.getPaint());
 		paint.setTextSize(newTextSize);
 		float newTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
 		paint.setTextSize(mTitleTextSize);
 		float originTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
 		float xTitleOffset = (mToolbarTextPoint[0] - mTitleTextViewPoint[0] -
-				(originTextWidth - newTextWidth) / 2f) * offset;
+				(mToolbarTextView.getWidth() > newTextWidth ?
+						(originTextWidth - newTextWidth) / 2f : 0)) * offset;
 		float yTitleOffset = (mToolbarTextPoint[1] - mTitleTextViewPoint[1]) * offset;
 		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
 		mTitleTextView.setTranslationX(xTitleOffset);
@@ -164,14 +165,14 @@ public class MainActivity extends AppCompatActivity {
 
 					@Override
 					public void run() {
-						resetPoints();
+						resetPoints(true);
 					}
 				});
 			}
 		});
 	}
 
-	private void resetPoints() {
+	private void resetPoints(boolean isTextChanged) {
 		final float offset = mAppBarStateChangeListener.getCurrentOffset();
 
 		float newAvatarSize = Utils.convertDpToPixel(
@@ -183,8 +184,9 @@ public class MainActivity extends AppCompatActivity {
 		mAvatarImageView.getLocationOnScreen(avatarPoint);
 		mAvatarPoint[0] = avatarPoint[0] - mAvatarImageView.getTranslationX() -
 				(expandAvatarSize - newAvatarSize) / 2f;
+		// If avatar center in vertical, just half `(expandAvatarSize - newAvatarSize)`
 		mAvatarPoint[1] = avatarPoint[1] - mAvatarImageView.getTranslationY() -
-				(expandAvatarSize - newAvatarSize) / 2f;
+				(expandAvatarSize - newAvatarSize);
 
 		int[] spacePoint = new int[2];
 		mSpace.getLocationOnScreen(spacePoint);
@@ -196,26 +198,26 @@ public class MainActivity extends AppCompatActivity {
 		mToolbarTextPoint[0] = toolbarTextPoint[0];
 		mToolbarTextPoint[1] = toolbarTextPoint[1];
 
-		float newTextSize =
-				mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
-		Paint paint = new Paint();
-		paint.setTextSize(newTextSize);
+		Paint paint = new Paint(mTitleTextView.getPaint());
 		float newTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
 		paint.setTextSize(mTitleTextSize);
 		float originTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
 		int[] titleTextViewPoint = new int[2];
 		mTitleTextView.getLocationOnScreen(titleTextViewPoint);
 		mTitleTextViewPoint[0] = titleTextViewPoint[0] - mTitleTextView.getTranslationX() -
-				(originTextWidth - newTextWidth) / 2f;
+				(mToolbarTextView.getWidth() > newTextWidth ?
+						(originTextWidth - newTextWidth) / 2f : 0);
 		mTitleTextViewPoint[1] = titleTextViewPoint[1] - mTitleTextView.getTranslationY();
 
-		new Handler().post(new Runnable() {
+		if (isTextChanged) {
+			new Handler().post(new Runnable() {
 
-			@Override
-			public void run() {
-				translationView(offset);
-			}
-		});
+				@Override
+				public void run() {
+					translationView(offset);
+				}
+			});
+		}
 	}
 
 	@Override
@@ -224,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 		if (!hasFocus) {
 			return;
 		}
-		resetPoints();
+		resetPoints(false);
 	}
 
 	private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
