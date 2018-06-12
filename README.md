@@ -8,10 +8,10 @@ An android amazing avatar anim in CollapsingToolbarLayout.
 <img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/screenrecord.gif" height="500">
 
 ### Expanded
-<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/device-2017-03-12-220509.png" height="500">
+<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/device-2018-06-12-173327.png" height="500">
 
 ### Collapsed
-<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/device-2017-03-12-220529.png" height="500">
+<img src="https://raw.githubusercontent.com/hearsilent/AmazingAvatar/master/screenshots/device-2018-06-12-173349.png" height="500">
 
 ## Usage
 

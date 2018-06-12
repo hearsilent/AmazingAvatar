@@ -1,5 +1,6 @@
 package hearsilent.amazingavatar;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 	private RecyclerView mRecyclerView;
 	private AppBarStateChangeListener mAppBarStateChangeListener;
 
-	private int[] mAvatarPoint = new int[2], mSpacePoint = new int[2], mToolbarTextPoint =
-			new int[2], mTitleTextViewPoint = new int[2];
+	private float[] mAvatarPoint = new float[2], mSpacePoint = new float[2], mToolbarTextPoint =
+			new float[2], mTitleTextViewPoint = new float[2];
 	private float mTitleTextSize;
 
 	@Override
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void setUpToolbar() {
+		mAppBarLayout.getLayoutParams().height = Utils.getDisplayMetrics(this).widthPixels * 9 / 16;
+		mAppBarLayout.requestLayout();
+
 		setSupportActionBar(mToolBar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -110,20 +114,31 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void translationView(float offset) {
-		float xOffset = -(mAvatarPoint[0] - mSpacePoint[0]) * offset;
-		float yOffset = -(mAvatarPoint[1] - mSpacePoint[1]) * offset;
-		float xTitleOffset = -(mTitleTextViewPoint[0] - mToolbarTextPoint[0]) * offset;
-		float yTitleOffset = -(mTitleTextViewPoint[1] - mToolbarTextPoint[1]) * offset;
-		int newSize = Utils.convertDpToPixelSize(
+		float newAvatarSize = Utils.convertDpToPixel(
 				EXPAND_AVATAR_SIZE_DP - (EXPAND_AVATAR_SIZE_DP - COLLAPSED_AVATAR_SIZE_DP) * offset,
-				MainActivity
-						.this);
+				this);
+		float expandAvatarSize = (int) Utils.convertDpToPixel(EXPAND_AVATAR_SIZE_DP, this);
+		float xAvatarOffset =
+				(mSpacePoint[0] - mAvatarPoint[0] - (expandAvatarSize - newAvatarSize) / 2f) *
+						offset;
+		float yAvatarOffset =
+				(mSpacePoint[1] - mAvatarPoint[1] - (expandAvatarSize - newAvatarSize) / 2f) *
+						offset;
+		mAvatarImageView.getLayoutParams().width = Math.round(newAvatarSize);
+		mAvatarImageView.getLayoutParams().height = Math.round(newAvatarSize);
+		mAvatarImageView.setTranslationX(xAvatarOffset);
+		mAvatarImageView.setTranslationY(yAvatarOffset);
+
 		float newTextSize =
 				mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
-		mAvatarImageView.getLayoutParams().width = newSize;
-		mAvatarImageView.getLayoutParams().height = newSize;
-		mAvatarImageView.setTranslationX(xOffset);
-		mAvatarImageView.setTranslationY(yOffset);
+		Paint paint = new Paint();
+		paint.setTextSize(newTextSize);
+		float newTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
+		paint.setTextSize(mTitleTextSize);
+		float originTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
+		float xTitleOffset = (mToolbarTextPoint[0] - mTitleTextViewPoint[0] -
+				(originTextWidth - newTextWidth) / 2f) * offset;
+		float yTitleOffset = (mToolbarTextPoint[1] - mTitleTextViewPoint[1]) * offset;
 		mTitleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, newTextSize);
 		mTitleTextView.setTranslationX(xTitleOffset);
 		mTitleTextView.setTranslationY(yTitleOffset);
@@ -142,9 +157,9 @@ public class MainActivity extends AppCompatActivity {
 					return;
 				}
 				ImageLoader.getInstance().displayImage(avatarModel.url, mAvatarImageView);
-				mTitleTextView.setText(
-						String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
-								avatarModel.lastName));
+				String name = String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
+						avatarModel.lastName);
+				mTitleTextView.setText(name);
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 
 					@Override
@@ -157,22 +172,48 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void resetPoints() {
-		int avatarSize = Utils.convertDpToPixelSize(EXPAND_AVATAR_SIZE_DP, this);
-		mAvatarImageView.getLocationOnScreen(mAvatarPoint);
-		mAvatarPoint[0] -= mAvatarImageView.getTranslationX() +
-				(avatarSize - mAvatarImageView.getWidth()) / 2f;
-		mAvatarPoint[1] -= mAvatarImageView.getTranslationY();
-		mSpace.getLocationOnScreen(mSpacePoint);
-		mToolbarTextView.getLocationOnScreen(mToolbarTextPoint);
-		mToolbarTextPoint[0] += Utils.convertDpToPixelSize(16, this);
-		mTitleTextView.getLocationOnScreen(mTitleTextViewPoint);
-		mTitleTextViewPoint[0] -= mTitleTextView.getTranslationX();
-		mTitleTextViewPoint[1] -= mTitleTextView.getTranslationY();
+		final float offset = mAppBarStateChangeListener.getCurrentOffset();
+
+		float newAvatarSize = Utils.convertDpToPixel(
+				EXPAND_AVATAR_SIZE_DP - (EXPAND_AVATAR_SIZE_DP - COLLAPSED_AVATAR_SIZE_DP) * offset,
+				this);
+		float expandAvatarSize = (int) Utils.convertDpToPixel(EXPAND_AVATAR_SIZE_DP, this);
+
+		int[] avatarPoint = new int[2];
+		mAvatarImageView.getLocationOnScreen(avatarPoint);
+		mAvatarPoint[0] = avatarPoint[0] - mAvatarImageView.getTranslationX() -
+				(expandAvatarSize - newAvatarSize) / 2f;
+		mAvatarPoint[1] = avatarPoint[1] - mAvatarImageView.getTranslationY() -
+				(expandAvatarSize - newAvatarSize) / 2f;
+
+		int[] spacePoint = new int[2];
+		mSpace.getLocationOnScreen(spacePoint);
+		mSpacePoint[0] = spacePoint[0];
+		mSpacePoint[1] = spacePoint[1];
+
+		int[] toolbarTextPoint = new int[2];
+		mToolbarTextView.getLocationOnScreen(toolbarTextPoint);
+		mToolbarTextPoint[0] = toolbarTextPoint[0];
+		mToolbarTextPoint[1] = toolbarTextPoint[1];
+
+		float newTextSize =
+				mTitleTextSize - (mTitleTextSize - mToolbarTextView.getTextSize()) * offset;
+		Paint paint = new Paint();
+		paint.setTextSize(newTextSize);
+		float newTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
+		paint.setTextSize(mTitleTextSize);
+		float originTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
+		int[] titleTextViewPoint = new int[2];
+		mTitleTextView.getLocationOnScreen(titleTextViewPoint);
+		mTitleTextViewPoint[0] = titleTextViewPoint[0] - mTitleTextView.getTranslationX() -
+				(originTextWidth - newTextWidth) / 2f;
+		mTitleTextViewPoint[1] = titleTextViewPoint[1] - mTitleTextView.getTranslationY();
+
 		new Handler().post(new Runnable() {
 
 			@Override
 			public void run() {
-				translationView(mAppBarStateChangeListener.getCurrentOffset());
+				translationView(offset);
 			}
 		});
 	}

@@ -2,6 +2,7 @@ package hearsilent.amazingavatar.libs;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Paint;
 import android.util.DisplayMetrics;
 
 public class Utils {
@@ -26,6 +27,10 @@ public class Utils {
 			return 1;
 		}
 		return -1;
+	}
+
+	public static float getTextWidth(Paint paint, String text) {
+		return paint.measureText(text);
 	}
 
 }
