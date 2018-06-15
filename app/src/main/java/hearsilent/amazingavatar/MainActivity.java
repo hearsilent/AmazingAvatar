@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
 		float newAvatarSize = Utils.convertDpToPixel(
 				EXPAND_AVATAR_SIZE_DP - (EXPAND_AVATAR_SIZE_DP - COLLAPSED_AVATAR_SIZE_DP) * offset,
 				this);
-		float expandAvatarSize = (int) Utils.convertDpToPixel(EXPAND_AVATAR_SIZE_DP, this);
+		float expandAvatarSize = Utils.convertDpToPixel(EXPAND_AVATAR_SIZE_DP, this);
 		float xAvatarOffset =
 				(mSpacePoint[0] - mAvatarPoint[0] - (expandAvatarSize - newAvatarSize) / 2f) *
 						offset;
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 		float newAvatarSize = Utils.convertDpToPixel(
 				EXPAND_AVATAR_SIZE_DP - (EXPAND_AVATAR_SIZE_DP - COLLAPSED_AVATAR_SIZE_DP) * offset,
 				this);
-		float expandAvatarSize = (int) Utils.convertDpToPixel(EXPAND_AVATAR_SIZE_DP, this);
+		float expandAvatarSize = Utils.convertDpToPixel(EXPAND_AVATAR_SIZE_DP, this);
 
 		int[] avatarPoint = new int[2];
 		mAvatarImageView.getLocationOnScreen(avatarPoint);
