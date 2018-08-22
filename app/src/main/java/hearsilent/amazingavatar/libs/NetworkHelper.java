@@ -2,33 +2,34 @@ package hearsilent.amazingavatar.libs;
 
 import android.support.annotation.NonNull;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import cz.msebera.android.httpclient.Header;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import hearsilent.amazingavatar.callbacks.AvatarCallback;
 import hearsilent.amazingavatar.models.AvatarModel;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class NetworkHelper {
 
-	private static AsyncHttpClient mClient = null;
+	private static OkHttpClient mClient;
 
-	private static AsyncHttpClient init() {
-		AsyncHttpClient client = new AsyncHttpClient();
-		client.addHeader("Connection", "Keep-Alive");
-		client.setEnableRedirects(true, true, true);
-
-		client.setTimeout(8 * 1000);
-		return client;
+	private static void init() {
+		mClient = new OkHttpClient().newBuilder().followRedirects(false).followSslRedirects(false)
+				.connectTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS)
+				.readTimeout(30, TimeUnit.SECONDS).build();
 	}
 
-	private static AsyncHttpClient getClient() {
+	private static OkHttpClient getClient() {
 		if (mClient == null) {
-			mClient = init();
+			init();
 		}
 		return mClient;
 	}
@@ -36,27 +37,36 @@ public class NetworkHelper {
 	private static final String AVATAR_URL = "https://tinyfac.es/api/users";
 
 	public static void getAvatar(@NonNull final AvatarCallback callback) {
-		AsyncHttpClient client = getClient();
+		OkHttpClient client = getClient();
 
-		client.get(AVATAR_URL, new JsonHttpResponseHandler() {
+		Request request = new Request.Builder().url(AVATAR_URL).get().build();
+
+		client.newCall(request).enqueue(new Callback() {
 
 			@Override
-			public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-				super.onSuccess(statusCode, headers, response);
-				if (statusCode != 200) {
-					callback.onFail();
-				} else {
+			public void onFailure(@NonNull Call call, @NonNull IOException e) {
+				callback.onFail();
+			}
+
+			@Override
+			public void onResponse(@NonNull Call call, @NonNull Response response) {
+				if (response.code() == 200) {
 					try {
-						JSONObject jsonObject = response.getJSONObject(0);
+						ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+						String body = responseBodyCopy.string();
+						JSONArray jsonArray = new JSONArray(body);
+						JSONObject jsonObject = jsonArray.getJSONObject(0);
 						AvatarModel model = new AvatarModel();
 						model.url = jsonObject.getJSONArray("avatars").getJSONObject(0)
 								.getString("url");
 						model.firstName = jsonObject.getString("first_name");
 						model.lastName = jsonObject.getString("last_name");
 						callback.onSuccess(model);
-					} catch (JSONException ignore) {
+					} catch (Exception ignore) {
 						callback.onFail();
 					}
+				} else {
+					callback.onFail();
 				}
 			}
 		});

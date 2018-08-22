@@ -3,7 +3,6 @@ package hearsilent.amazingavatar;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Space;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import java.util.Locale;
 
@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
 	private final static float EXPAND_AVATAR_SIZE_DP = 80f;
 	private final static float COLLAPSED_AVATAR_SIZE_DP = 32f;
+
+	private View mContainerView;
 
 	private AppBarLayout mAppBarLayout;
 	private CircleImageView mAvatarImageView;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	private void findViews() {
+		mContainerView = findViewById(R.id.view_container);
 		mAppBarLayout = findViewById(R.id.app_bar);
 		mAvatarImageView = findViewById(R.id.imageView_avatar);
 		mToolbarTextView = findViewById(R.id.toolbar_title);
@@ -136,7 +139,12 @@ public class MainActivity extends AppCompatActivity {
 		float newTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
 		paint.setTextSize(mTitleTextSize);
 		float originTextWidth = Utils.getTextWidth(paint, mTitleTextView.getText().toString());
-		float xTitleOffset = (mToolbarTextPoint[0] - mTitleTextViewPoint[0] -
+		// If rtl should move title view to end of view.
+		boolean isRTL = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) ==
+				View.LAYOUT_DIRECTION_RTL ||
+				mContainerView.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+		float xTitleOffset = ((mToolbarTextPoint[0] + (isRTL ? mToolbarTextView.getWidth() : 0)) -
+				(mTitleTextViewPoint[0] + (isRTL ? mTitleTextView.getWidth() : 0)) -
 				(mToolbarTextView.getWidth() > newTextWidth ?
 						(originTextWidth - newTextWidth) / 2f : 0)) * offset;
 		float yTitleOffset = (mToolbarTextPoint[1] - mTitleTextViewPoint[1]) * offset;
@@ -152,20 +160,27 @@ public class MainActivity extends AppCompatActivity {
 		NetworkHelper.getAvatar(new AvatarCallback() {
 
 			@Override
-			public void onSuccess(AvatarModel avatarModel) {
+			public void onSuccess(final AvatarModel avatarModel) {
 				super.onSuccess(avatarModel);
 				if (isFinishing()) {
 					return;
 				}
-				ImageLoader.getInstance().displayImage(avatarModel.url, mAvatarImageView);
-				String name = String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
-						avatarModel.lastName);
-				mTitleTextView.setText(name);
-				new Handler(Looper.getMainLooper()).post(new Runnable() {
+				runOnUiThread(new Runnable() {
 
 					@Override
 					public void run() {
-						resetPoints(true);
+						Glide.with(MainActivity.this).load(avatarModel.url).into(mAvatarImageView);
+						String name =
+								String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
+										avatarModel.lastName);
+						mTitleTextView.setText(name);
+						mTitleTextView.post(new Runnable() {
+
+							@Override
+							public void run() {
+								resetPoints(true);
+							}
+						});
 					}
 				});
 			}
