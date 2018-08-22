@@ -94,7 +94,7 @@ You can change header view to what you want.
 
 ## Compatibility
 
-Android GINGERBREAD 4.1+
+Android GINGERBREAD 4.2+
 
 ## Credits
 
