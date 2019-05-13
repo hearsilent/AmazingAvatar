@@ -10,6 +10,9 @@ android {
         versionCode 107
         versionName "1.0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
+
     }
     buildTypes {
         release {
