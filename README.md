@@ -102,7 +102,7 @@ Avatars from [maximedegreve/TinyFaces](https://github.com/maximedegreve/TinyFace
 
 ## Let me know!
 
-I'd be really happy if you sent me links to your projects where you use my component. Just send an email to hear.silent1995@gmail.com And do let me know if you have any questions or suggestion regarding the example. 
+I'd be really happy if you sent me links to your projects where you use my component. Just send an email to hear.silent1995+github@gmail.com And do let me know if you have any questions or suggestion regarding the example. 
 
 ## License
 

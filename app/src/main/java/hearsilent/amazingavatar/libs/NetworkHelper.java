@@ -1,13 +1,12 @@
 package hearsilent.amazingavatar.libs;
 
-import android.support.annotation.NonNull;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
 import hearsilent.amazingavatar.callbacks.AvatarCallback;
 import hearsilent.amazingavatar.models.AvatarModel;
 import okhttp3.Call;

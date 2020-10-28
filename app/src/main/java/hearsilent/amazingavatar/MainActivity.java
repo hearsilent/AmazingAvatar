@@ -3,14 +3,6 @@ package hearsilent.amazingavatar;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -20,9 +12,17 @@ import android.widget.Space;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hearsilent.amazingavatar.callbacks.AvatarCallback;
 import hearsilent.amazingavatar.libs.AppBarStateChangeListener;
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
 	private RecyclerView mRecyclerView;
 	private AppBarStateChangeListener mAppBarStateChangeListener;
 
-	private float[] mAvatarPoint = new float[2], mSpacePoint = new float[2], mToolbarTextPoint =
-			new float[2], mTitleTextViewPoint = new float[2];
+	private final float[] mAvatarPoint = new float[2], mSpacePoint = new float[2],
+			mToolbarTextPoint = new float[2], mTitleTextViewPoint = new float[2];
 	private float mTitleTextSize;
 
 	@Override
@@ -244,11 +244,11 @@ public class MainActivity extends AppCompatActivity {
 		resetPoints(false);
 	}
 
-	private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+	private static class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-		private class DemoViewHolder extends RecyclerView.ViewHolder {
+		private static class DemoViewHolder extends RecyclerView.ViewHolder {
 
-			private TextView textView;
+			private final TextView textView;
 
 			private DemoViewHolder(View view) {
 				super(view);
