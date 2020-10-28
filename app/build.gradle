@@ -6,8 +6,8 @@ android {
         applicationId "hearsilent.amazingavatar"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 107
-        versionName "1.0.7"
+        versionCode 110
+        versionName "1.1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
