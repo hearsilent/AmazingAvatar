@@ -95,7 +95,9 @@
 					app:layout_constraintBottom_toTopOf="@+id/guideline"
 					app:layout_constraintEnd_toEndOf="parent"
 					app:layout_constraintStart_toStartOf="parent"
-					app:shapeAppearanceOverlay="@style/CircleShape"/>
+					app:shapeAppearanceOverlay="@style/CircleShape"
+					app:strokeColor="#9FA8DA"
+					app:strokeWidth="1dp"/>
 			</androidx.constraintlayout.motion.widget.MotionLayout>
 		</com.google.android.material.appbar.CollapsingToolbarLayout>
 	</com.google.android.material.appbar.AppBarLayout>
