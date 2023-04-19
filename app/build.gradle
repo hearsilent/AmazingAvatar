@@ -8,11 +8,11 @@ android {
     compileSdk 33
     namespace 'hearsilent.amazingavatar'
     defaultConfig {
-        versionCode 110
-        versionName "1.1.0"
         applicationId namespace
         minSdk 21
         targetSdk 33
+        versionCode 200
+        versionName "2.0.0"
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
