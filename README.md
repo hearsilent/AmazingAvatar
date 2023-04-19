@@ -30,49 +30,88 @@ Just Clone and Build.
 You can change header view to what you want.
 
 ```xml
-
-<com.google.android.material.appbar.CollapsingToolbarLayout android:layout_width="match_parent"
-	android:layout_height="match_parent" app:contentScrim="@android:color/transparent"
+<com.google.android.material.appbar.CollapsingToolbarLayout
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	app:contentScrim="@android:color/transparent"
 	app:layout_scrollFlags="scroll|exitUntilCollapsed"
-	app:statusBarScrim="@android:color/transparent" app:titleEnabled="false">
+	app:statusBarScrim="@android:color/transparent"
+	app:titleEnabled="false">
 
-	<androidx.appcompat.widget.Toolbar android:id="@+id/toolbar" android:layout_width="match_parent"
-		android:layout_height="?android:attr/actionBarSize" app:layout_collapseMode="pin"
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="?android:attr/actionBarSize"
+		app:layout_collapseMode="pin"
 		app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-	<androidx.constraintlayout.motion.widget.MotionLayout android:id="@+id/motion_header"
-		android:layout_width="match_parent" android:layout_height="match_parent"
-		android:clipChildren="false" android:clipToPadding="false" android:paddingStart="48dp"
-		android:paddingEnd="48dp" app:layoutDescription="@xml/scene_header"
-		app:layout_collapseMode="parallax" app:layout_collapseParallaxMultiplier="1">
+	<androidx.constraintlayout.motion.widget.MotionLayout
+		android:id="@+id/motion_header"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clipChildren="false"
+		android:clipToPadding="false"
+		android:paddingStart="48dp"
+		android:paddingEnd="48dp"
+		app:layoutDescription="@xml/scene_header"
+		app:layout_collapseMode="parallax"
+		app:layout_collapseParallaxMultiplier="1">
 
-		<Space android:id="@+id/space_toolbar" android:layout_width="0dp"
+		<Space
+			android:id="@+id/space_toolbar"
+			android:layout_width="0dp"
 			android:layout_height="?android:attr/actionBarSize"
-			app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"/>
 
-		<TextView android:id="@+id/textView_title_shadow" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:layout_marginTop="2dp"
-			android:ellipsize="end" android:maxLines="1" android:text="HearSilent"
-			android:textSize="24sp" android:visibility="invisible"
-			app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/guideline" tools:ignore="HardcodedText"/>
+		<TextView
+			android:id="@+id/textView_title_shadow"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="2dp"
+			android:ellipsize="end"
+			android:maxLines="1"
+			android:text="HearSilent"
+			android:textSize="24sp"
+			android:visibility="invisible"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/guideline"
+			tools:ignore="HardcodedText"/>
 
-		<TextView android:id="@+id/textView_title" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" android:ellipsize="end"
-			android:gravity="center_vertical|start" android:maxLines="1" android:text="HearSilent"
-			android:textColor="#FFF" android:textSize="24sp" tools:ignore="HardcodedText"/>
+		<TextView
+			android:id="@+id/textView_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:gravity="center_vertical|start"
+			android:maxLines="1"
+			android:text="HearSilent"
+			android:textColor="#FFF"
+			android:textSize="24sp"
+			tools:ignore="HardcodedText"/>
 
-		<androidx.constraintlayout.widget.Guideline android:id="@+id/guideline"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:orientation="horizontal" app:layout_constraintGuide_percent="0.6"/>
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_percent="0.6"/>
 
-		<com.google.android.material.imageview.ShapeableImageView android:id="@+id/imageView_avatar"
-			android:layout_width="80dp" android:layout_height="80dp"
-			android:layout_marginBottom="2dp" android:background="@drawable/avatar_background"
-			android:padding="1dp" app:layout_constraintBottom_toTopOf="@+id/guideline"
-			app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-			app:shapeAppearanceOverlay="@style/CircleShape"/>
+		<com.google.android.material.imageview.ShapeableImageView
+			android:id="@+id/imageView_avatar"
+			android:layout_width="80dp"
+			android:layout_height="80dp"
+			android:layout_marginBottom="2dp"
+			android:background="@drawable/avatar_background"
+			android:padding="1dp"
+			app:layout_constraintBottom_toTopOf="@+id/guideline"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:shapeAppearanceOverlay="@style/CircleShape"
+			app:strokeColor="#9FA8DA"
+			app:strokeWidth="1dp"/>
 	</androidx.constraintlayout.motion.widget.MotionLayout>
 </com.google.android.material.appbar.CollapsingToolbarLayout>
 ```
@@ -95,7 +134,7 @@ regarding the example.
 
     MIT License
 
-    Copyright (c) 2017 HearSilent
+    Copyright (c) 2023 HearSilent
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
