@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	/**
-	 * Avatar from TinyFaces (https://github.com/maximedegreve/TinyFaces)
+	 * Avatar from TinyFaces (<a href="https://github.com/maximedegreve/TinyFaces">TinyFaces</a>)
 	 */
 	private void fetchAvatar() {
 		NetworkHelper.getAvatar(new AvatarCallback() {
@@ -165,23 +165,13 @@ public class MainActivity extends AppCompatActivity {
 				if (isFinishing()) {
 					return;
 				}
-				runOnUiThread(new Runnable() {
-
-					@Override
-					public void run() {
-						Glide.with(MainActivity.this).load(avatarModel.url).into(mAvatarImageView);
-						String name =
-								String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
-										avatarModel.lastName);
-						mTitleTextView.setText(name);
-						mTitleTextView.post(new Runnable() {
-
-							@Override
-							public void run() {
-								resetPoints(true);
-							}
-						});
-					}
+				runOnUiThread(() -> {
+					Glide.with(MainActivity.this).load(avatarModel.url).into(mAvatarImageView);
+					String name =
+							String.format(Locale.getDefault(), "%s %s", avatarModel.firstName,
+									avatarModel.lastName);
+					mTitleTextView.setText(name);
+					mTitleTextView.post(() -> resetPoints(true));
 				});
 			}
 		});
@@ -225,13 +215,7 @@ public class MainActivity extends AppCompatActivity {
 		mTitleTextViewPoint[1] = titleTextViewPoint[1] - mTitleTextView.getTranslationY();
 
 		if (isTextChanged) {
-			new Handler().post(new Runnable() {
-
-				@Override
-				public void run() {
-					translationView(offset);
-				}
-			});
+			new Handler().post(() -> translationView(offset));
 		}
 	}
 

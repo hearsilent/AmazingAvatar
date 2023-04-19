@@ -37,7 +37,6 @@
     </JetCodeStyleSettings>
     <XML>
       <option name="XML_SPACE_INSIDE_EMPTY_TAG" value="false" />
-      <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
     <codeStyleSettings language="JAVA">
       <option name="KEEP_LINE_BREAKS" value="false" />
