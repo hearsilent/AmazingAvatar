@@ -7,11 +7,12 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 
-class FlingBehavior : AppBarLayout.Behavior {
-    private var isPositive = false
+class FlingBehavior @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null
+) : AppBarLayout.Behavior(context, attrs) {
 
-    constructor() {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
+    private var isPositive = false
 
     override fun onNestedFling(
         coordinatorLayout: CoordinatorLayout,

@@ -31,7 +31,7 @@ object NetworkHelper {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (response.code == 200) {
+                if (response.isSuccessful) {
                     try {
                         val responseBodyCopy = response.peekBody(Long.MAX_VALUE)
                         val body = responseBodyCopy.string()
@@ -42,7 +42,7 @@ object NetworkHelper {
                         model.firstName = jsonObject.getString("first_name")
                         model.lastName = jsonObject.getString("last_name")
                         callback.onSuccess(model)
-                    } catch (ignore: Exception) {
+                    } catch (_: Exception) {
                         callback.onFail()
                     }
                 } else {

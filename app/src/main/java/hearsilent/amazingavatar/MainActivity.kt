@@ -82,9 +82,8 @@ class MainActivity : AppCompatActivity() {
      * Avatar from TinyFaces ([TinyFaces](https://github.com/maximedegreve/TinyFaces))
      */
     private fun fetchAvatar() {
-        NetworkHelper.getAvatar(object : AvatarCallback() {
+        NetworkHelper.getAvatar(object : AvatarCallback {
             override fun onSuccess(avatarModel: AvatarModel) {
-                super.onSuccess(avatarModel)
                 if (isFinishing) {
                     return
                 }
@@ -96,6 +95,10 @@ class MainActivity : AppCompatActivity() {
                     mBinding.textViewTitleShadow.text = name
                     mBinding.textViewTitle.text = name
                 }
+            }
+
+            override fun onFail() {
+
             }
         })
     }

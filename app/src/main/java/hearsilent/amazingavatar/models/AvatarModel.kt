@@ -1,12 +1,7 @@
 package hearsilent.amazingavatar.models
 
-class AvatarModel {
-    @JvmField
-    var url: String? = null
-
-    @JvmField
-    var firstName: String? = null
-
-    @JvmField
+data class AvatarModel(
+    var url: String? = null,
+    var firstName: String? = null,
     var lastName: String? = null
-}
+)
