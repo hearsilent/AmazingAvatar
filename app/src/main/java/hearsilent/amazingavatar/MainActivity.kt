@@ -3,6 +3,7 @@ package hearsilent.amazingavatar
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import com.google.android.material.appbar.AppBarLayout
 import hearsilent.amazingavatar.adapter.DemoAdapter
 import hearsilent.amazingavatar.callbacks.AvatarCallback
 import hearsilent.amazingavatar.databinding.ActivityMainBinding
+import hearsilent.amazingavatar.extensions.statusHeight
 import hearsilent.amazingavatar.libs.AppBarStateChangeListener
 import hearsilent.amazingavatar.libs.NetworkHelper
 import hearsilent.amazingavatar.libs.Utils
@@ -50,6 +52,18 @@ class MainActivity : AppCompatActivity() {
     private fun setUpToolbar() {
         mBinding.appBar.layoutParams.height = Utils.getDisplayMetrics(this).widthPixels * 9 / 16
         mBinding.appBar.requestLayout()
+
+        ViewCompat.setOnApplyWindowInsetsListener(mBinding.root) { _, insets ->
+            val statusHeight = insets.statusHeight
+
+            mBinding.appBar.layoutParams.height = Utils.getDisplayMetrics(this).widthPixels * 9 /
+                    16 + statusHeight
+            mBinding.appBar.requestLayout()
+            mBinding.appBar.setPadding(0, statusHeight, 0, 0)
+
+            insets
+        }
+
         setSupportActionBar(mBinding.toolbar)
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
